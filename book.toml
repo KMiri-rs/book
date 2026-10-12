@@ -1,16 +1,14 @@
 [book]
-authors = ["YOUR_NAME"]
-language = "zh-CN"
 src = "src"
-title = "YOUR_SITE_TITLE"
+title = "KMiri Book"
 
 [build]
 build-dir = "public"
 
 [output.html]
 default-theme = "light"
-git-repository-url = "https://github.com/kern-crates/mdbook-template"
-edit-url-template = "https://github.com/kern-crates/mdbook-template/edit/main/{path}"
+git-repository-url = "https://github.com/KMiri-rs/book"
+edit-url-template = "https://github.com/KMiri-rs/book/edit/main/{path}"
 additional-js = ["giscus.js"]
 
 [output.html.fold]
