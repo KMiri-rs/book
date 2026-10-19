@@ -1,14 +1,14 @@
-# 10. 附录
+# 附录
 
-## 10.1 Shims API 完整清单
+## Shims API 完整清单
 
 [把当前所有 API 原型和语义约束放在这里，便于查阅。]
 
-## 10.2 配置项与默认值
+## 配置项与默认值
 
 [地址、容量、对齐、开关项、实验性参数。]
 
-## 10.3 模拟器
+## 模拟器
 
 r[emulator.riscv]
 
@@ -35,7 +35,7 @@ r[emulator.riscv]
 [sail-riscv]: https://github.com/riscv/sail-riscv
 
 
-## 10.4 参考资料
+## 参考资料
 
 * [README.md]
 * [KernMiri-Overview.md]
