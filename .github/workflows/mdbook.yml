@@ -24,10 +24,10 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v6
-      - name: Install mdBook
+      - name: Install mdbook
         run: |
-          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.5.4/mdbook-v0.5.4-x86_64-unknown-linux-gnu.tar.gz \
-            | tar xz -C /usr/local/bin
+          make vercel-install-dev
+          wget https://github.com/os-checker/dockerfiles/releases/download/os-checker-test/mdbook-spec -P /usr/local/bin && chmod +x /usr/local/bin/mdbook-spec
       - name: Build with mdBook
         run: mdbook build
       - name: Upload artifact

@@ -14,3 +14,6 @@ additional-js = ["giscus.js"]
 [output.html.fold]
 enable = true
 level = 0
+
+[preprocessor.spec]
+command = "mdbook-spec"

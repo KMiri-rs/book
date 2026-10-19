@@ -2,6 +2,8 @@
 
 ## 1.1 背景与动机
 
+r[intro.background]
+
 内核安全问题的核心之一是未定义行为（UB）。即便内核主要使用 Rust 编写，UB 风险也不会自动消失：内核仍需要通过 `unsafe` 代码完成底层内存管理、硬件访问和执行上下文切换；这些代码必须自行维护安全前提，编译通过并不等于这些前提在运行时始终成立。
 
 Miri 是 Rust 官方的动态语义检查器。它解释执行 Rust 的 MIR，并维护内存对象、初始化状态、指针可达性与借用关系等语义信息，从而检测越界访问、释放后使用、读取未初始化内存、借用规则冲突等语言级 UB。
@@ -10,8 +12,13 @@ Miri 是 Rust 官方的动态语义检查器。它解释执行 Rust 的 MIR，�
 
 这可以用[三个层次的 UB][Asterinas-Soundness]来概括：
 
+r[intro.ub.language]
 * **语言级 UB（language-level UB）**：违反 Rust 语言语义导致的 UB，例如越界访问、释放后使用、借用规则冲突、数据竞争等。
+
+r[intro.ub.environment]
 * **环境级 UB（environment-level UB）**：执行环境被破坏导致的 UB，例如页状态与生命周期管理错误、错误映射导致对象语义失真、栈/上下文切换不一致等。
+
+r[intro.ub.architecture]
 * **架构级 UB（architecture-level UB）**：违反硬件或体系结构契约导致的错误，例如中断控制器、IOMMU、设备寄存器协议等使用不当。
 
 [Asterinas-Soundness]: https://asterinas.github.io/book/ostd/soundness/what-soundness-means.html#three-levels-of-undefined-behavior
@@ -29,28 +36,49 @@ KMiri 的核心动机是：**在完整保留并复用 Miri 语言级 UB 检查�
 
 ## 1.2 问题定义
 
+r[intro.problem-definition]
+
 **如何在尽量保留内核原有代码的情况下，让内核自己管理的内存和执行状态成为 Miri 能够理解和检查的对象？**
 
 具体需要回答三个问题：
 
+r[intro.problem.memory]
 * **内核管理的内存如何被检查？** 内核自行分配物理页、建立映射，并在这些地址上创建和回收 Rust 对象。解释器需要知道这些对象的范围、生命周期及不同地址之间的对应关系。例如，某个对象已经被内核释放，但所在的大块内存仍然存在，解释器能否识别之后的访问属于释放后使用？
+
+r[intro.problem.execution]
 * **内核管理的执行过程如何被检查？** 内核自行调度线程、切换栈，并访问 CPU-local 数据。解释器需要理解这些操作对执行上下文和并发关系的影响，才能检查后续访问，而不是只让程序继续运行。
+
+r[intro.problem.portability]
 * **这些能力如何适用于不同内核？** 不同内核的分配器、调度器、架构接口和构建方式不同。需要研究哪些信息可以从原有执行中识别，哪些需要额外提供，以及如何避免每接入一个内核就重新修改解释器。即存不存在一种kmiri的设计，能够接入不同的rust内核里面？
 
 ## 1.3 目标与非目标
 
+r[intro.goals]
+
 **目标**
 
+r[intro.goal.checking]
 * **保留检查能力。** 内核操作接入解释器后，仍能对相关 Rust 代码进行内存边界、初始化、指针有效性、借用及数据竞争检查；不能通过关闭检查或忽略关键操作来实现“跑通”。
+
+r[intro.goal.adaptation]
 * **降低跨内核接入成本。** 优先研究从内核原有执行中识别必要信息的方法，尽量减少内核侧修改，并明确共享机制与内核专用适配的边界。是否能够做到、哪些操作仍需额外对接，须通过不同内核的实验验证。
+
+r[intro.goal.path-coverage]
 * **检查真实内核路径。** 支持执行内核原有的内存管理和调度代码，包括必要的初始化与操作序列，使检查能够覆盖单个函数之外的对象交互和状态变化。
 
 **非目标**
 
+r[intro.non-goals]
+
+r[intro.non-goal.hardware]
 * [例如：不模拟完整硬件设备与外设行为]
+
+r[intro.non-goal.emulator]
 * [例如：不替代 QEMU 等机器仿真器]
 
 ## 1.4 术语与缩写
+
+r[intro.terms]
 
 * MIR：Rust 编译器交给 Miri 执行的一层表示。函数被变成赋值、调用、返回等操作后，Miri 逐条执行它们，并同时更新对象、初始化、指针权限和借用记录。
 * UB：未定义行为，即 Rust 没有为其规定结果的行为。释放后使用、越界、读取未初始化内存，以及违反借用或指针权限，都是这里所说的 UB。
