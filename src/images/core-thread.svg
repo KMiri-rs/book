@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="860" height="300" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">内核线程创建与切换时内核与 KMiri 的分工</title>
+<desc id="d">内核创建任务 T 时调用 miri_create_new_thread，KMiri 新建 Miri 线程并记录任务、入口和栈。内核调度器选出下一个任务 T 后调用 miri_switch_to，KMiri 在当前语句结束后切换到 T 的线程，T 的代码开始运行。调度决策始终由内核做出。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<rect x="10" y="30" width="840" height="100" rx="8" fill="#f4f8fc" stroke="#c8d6e8"/>
+<rect x="10" y="180" width="840" height="100" rx="8" fill="#f6f3fb" stroke="#d8cfe8"/>
+<g font-weight="bold" text-anchor="middle"><text x="80" y="76">内核</text><text x="80" y="226">KMiri</text></g>
+<g font-size="12" fill="#555" text-anchor="middle"><text x="80" y="98">被解释执行的代码</text><text x="80" y="248">解释器状态</text></g>
+<g stroke="#555" stroke-width="1.5">
+<rect x="170" y="55" width="180" height="50" rx="8" fill="#dde8f4"/><rect x="410" y="55" width="210" height="50" rx="8" fill="#dde8f4"/><rect x="670" y="55" width="160" height="50" rx="8" fill="#dde8f4"/>
+<rect x="170" y="200" width="180" height="60" rx="8" fill="#ece6f5"/><rect x="410" y="200" width="210" height="60" rx="8" fill="#ece6f5"/>
+</g>
+<g text-anchor="middle">
+<text x="260" y="85">创建任务 T</text><text x="515" y="85">调度器选出下一个任务 T</text><text x="750" y="85">T 的代码开始运行</text>
+<text x="260" y="225">新建 Miri 线程</text><text x="260" y="247" font-size="12" fill="#555">记录 T、入口和栈</text>
+<text x="515" y="225">当前语句执行完后</text><text x="515" y="247" font-size="12" fill="#555">切换到 T 对应的线程</text>
+</g>
+<g stroke="#444" stroke-width="1.5" fill="none" marker-end="url(#a)"><line x1="260" y1="105" x2="260" y2="198"/><line x1="515" y1="105" x2="515" y2="198"/><line x1="620" y1="225" x2="740" y2="108"/></g>
+<g font-family="monospace" font-size="12" fill="#555"><text x="268" y="158">miri_create_new_thread</text><text x="523" y="158">miri_switch_to</text></g>
+</svg>

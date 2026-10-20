@@ -46,7 +46,7 @@ BlueOS 按 [snapshot.xml](https://github.com/KMiri-rs/KMiri/blob/33963c7ebde744f
 * **TockOS**：从总仓库执行 `make -C tock/boards/qemu_rv64_virt` 编译板级内核，见[构建目标](https://github.com/KMiri-rs/tock/blob/b07f8a811d7fc6317f6a77ea0b066d8ecf80134c/boards/Makefile.common#L245-L265)；[目标配置](https://github.com/KMiri-rs/tock/blob/b07f8a811d7fc6317f6a77ea0b066d8ecf80134c/boards/qemu_rv64_virt/.cargo/config.toml#L5-L12)为 `riscv64imac-unknown-none-elf`，入口为 `miri_start`。适配 [PR #10](https://github.com/KMiri-rs/tock/pull/10) 的源提交即基线 `b07f8a8…`，合并提交为 `94bbfeb55979d65d0b49018ca72d5f9307a744c7`；其中记录了初始化与无中断主循环执行，最终因主动 panic 而 abort，并非退出 0。
 * **BlueOS**：从 `vivo-blueos` 执行 `make miri_boot`，其[构建目标](https://github.com/KMiri-rs/KMiri/blob/33963c7ebde744f52657d4205b39e42a9bbefd23/vivo-blueos/Makefile#L132-L172)先生成带 MIR 的依赖，再复用 GN 编译参数解释内核；另有[基础库／分配器测试](https://github.com/KMiri-rs/KMiri/blob/33963c7ebde744f52657d4205b39e42a9bbefd23/vivo-blueos/Makefile#L110-L125)与[内核测试](https://github.com/KMiri-rs/KMiri/blob/33963c7ebde744f52657d4205b39e42a9bbefd23/vivo-blueos/Makefile#L176-L185)入口。后续 [kernel PR #17](https://github.com/KMiri-rs/vivoblueos-kernel/pull/17) 记录的 10 月 11 日验证使用 kernel `db2c9c446c36e09fe7fe7362561bf8fde7e21f18`、build `2f4ef597da6e6547fcd52bfddce8eb49a12a46c5`：原初始化、十轮 idle、`BLUEOS_MIRI_DONE`，解释器退出 0。这是配套依赖和工具链下的 GN action 验证，不是对上述 snapshot 组合的重新验证；未覆盖应用、真实上下文切换、硬件中断投递或 SMP。
 
-页表路径只适用于启用分页的内核；无分页或 MPU 配置按各自的地址访问与内存保护机制适配。内存、页表与执行模型见[核心设计](core-design.md#r-core.memory.layout)。
+页表路径只适用于启用分页的内核；无分页或 MPU 配置按各自的地址访问与内存保护机制适配。内存、页表与执行模型见[核心设计](core-design.md#r-core.approach)。
 
 ## 外部集成关系
 

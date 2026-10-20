@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 430" width="820" height="430" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">内核在真实硬件上与在 KMiri 中运行的分层对照</title>
+<desc id="d">左侧：内核通用代码运行在 x86-64 或 RISC-V 架构层、引导程序和真实 CPU 之上。右侧：同一份内核通用代码运行在纯 Rust 编写的 Mirch 架构层之上，架构层调用 Shims 与 KMiri 解释器交互，解释器运行在宿主机 Rust 标准库之上。虚线框内的代码被解释执行并接受 Miri 检查。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<g font-size="18" font-weight="bold" text-anchor="middle"><text x="205" y="34">在真实硬件上运行</text><text x="615" y="34">在 KMiri 中运行</text></g>
+<rect x="436" y="48" width="358" height="162" rx="12" fill="none" stroke="#5b9b4c" stroke-width="2" stroke-dasharray="7 5"/>
+<g stroke="#555" stroke-width="1.5">
+<rect x="40" y="60" width="330" height="60" rx="8" fill="#dde8f4"/><rect x="450" y="60" width="330" height="60" rx="8" fill="#dde8f4"/>
+<rect x="40" y="136" width="330" height="60" rx="8" fill="#f2f2f2"/><rect x="450" y="136" width="330" height="60" rx="8" fill="#fbe3d6"/>
+<rect x="40" y="232" width="330" height="60" rx="8" fill="#f2f2f2"/><rect x="450" y="232" width="330" height="60" rx="8" fill="#ece6f5"/>
+<rect x="40" y="308" width="330" height="60" rx="8" fill="#f2f2f2"/><rect x="450" y="308" width="330" height="60" rx="8" fill="#f2f2f2"/>
+</g>
+<g text-anchor="middle">
+<text x="205" y="86" font-weight="bold">内核通用代码</text><text x="205" y="108" font-size="13" fill="#555">内存管理 · 页表 · 调度 · 测试用例</text>
+<text x="205" y="162" font-weight="bold">x86-64 / RISC-V 架构层</text><text x="205" y="184" font-size="13" fill="#555">含汇编：建立页表、切换上下文</text>
+<text x="205" y="267" font-weight="bold">引导程序</text>
+<text x="205" y="343" font-weight="bold">真实 CPU 与 MMU</text>
+<text x="615" y="86" font-weight="bold">内核通用代码</text><text x="615" y="108" font-size="13" fill="#555">同一份代码，不需要修改</text>
+<text x="615" y="162" font-weight="bold">Mirch 架构层</text><text x="615" y="184" font-size="13" fill="#555">纯 Rust：硬件操作改为调用 Shims</text>
+<text x="615" y="258" font-weight="bold">KMiri 解释器（Mirch 伪架构）</text><text x="615" y="280" font-size="13" fill="#555">伪物理内存 · 页状态 · 页表 · 线程与 CPU</text>
+<text x="615" y="343" font-weight="bold">宿主机上的 Rust 标准库</text>
+</g>
+<line x1="370" y1="90" x2="450" y2="90" stroke="#888" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="410" y="82" font-size="13" fill="#555" text-anchor="middle">相同</text>
+<line x1="615" y1="197" x2="615" y2="230" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="625" y="219" font-size="13" fill="#555">调用 Shims</text>
+<rect x="452" y="392" width="26" height="16" rx="3" fill="none" stroke="#5b9b4c" stroke-width="2" stroke-dasharray="5 3"/>
+<text x="486" y="405" font-size="13" fill="#555">虚线框内的代码被解释执行，接受 Miri 检查</text>
+</svg>
