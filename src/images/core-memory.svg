@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 425" width="900" height="425" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">普通 Miri 与 KMiri 的内存与地址对比</title>
+<desc id="d">普通 Miri 中，栈、static 和堆对象的地址只要求互不重叠，散布在整个地址空间。KMiri 中，栈、static 和内核管理的对象经页表从虚拟地址翻译为物理地址，落在一块伪物理内存中；伪物理内存分为由解释器安排的内核代码区（启动页表、static、CPU-local、栈）和交给内核分配的页。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<g font-size="18" font-weight="bold" text-anchor="middle"><text x="210" y="34">普通 Miri</text><text x="660" y="34">KMiri</text></g>
+<g stroke="#555" stroke-width="1.5">
+<rect x="80" y="56" width="260" height="164" rx="6" fill="#fff"/>
+<rect x="110" y="92" width="200" height="34" fill="#fbe3d6"/><rect x="110" y="134" width="200" height="34" fill="#e2efda"/><rect x="110" y="176" width="200" height="34" fill="#dde8f4"/>
+<rect x="530" y="56" width="260" height="154" rx="6" fill="#fff"/>
+<rect x="560" y="90" width="200" height="32" fill="#fbe3d6"/><rect x="560" y="128" width="200" height="32" fill="#e2efda"/><rect x="560" y="166" width="200" height="32" fill="#dde8f4"/>
+<rect x="450" y="240" width="420" height="36" rx="4" fill="#ece6f5"/>
+<rect x="30" y="330" width="360" height="44" fill="#fff"/>
+<rect x="40" y="337" width="34" height="30" fill="#e2efda"/><rect x="84" y="337" width="50" height="30" fill="#fbe3d6"/><rect x="146" y="337" width="22" height="30" fill="#dde8f4"/><rect x="180" y="337" width="30" height="30" fill="#e2efda"/><rect x="226" y="337" width="34" height="30" fill="#fbe3d6"/><rect x="272" y="337" width="22" height="30" fill="#dde8f4"/><rect x="306" y="337" width="28" height="30" fill="#e2efda"/>
+<rect x="450" y="318" width="50" height="44" fill="#f2f2f2"/><rect x="500" y="318" width="70" height="44" fill="#e2efda"/><rect x="570" y="318" width="70" height="44" fill="#ece6f5"/><rect x="640" y="318" width="60" height="44" fill="#fbe3d6"/>
+<rect x="700" y="318" width="170" height="44" fill="#dde8f4"/>
+</g>
+<g stroke="#6b8fbf" stroke-width="1"><line x1="717" y1="318" x2="717" y2="362"/><line x1="734" y1="318" x2="734" y2="362"/><line x1="751" y1="318" x2="751" y2="362"/><line x1="768" y1="318" x2="768" y2="362"/><line x1="785" y1="318" x2="785" y2="362"/><line x1="802" y1="318" x2="802" y2="362"/><line x1="819" y1="318" x2="819" y2="362"/><line x1="836" y1="318" x2="836" y2="362"/><line x1="853" y1="318" x2="853" y2="362"/></g>
+<g text-anchor="middle">
+<text x="210" y="80" fill="#555">解释器中的对象</text>
+<text x="210" y="115">栈</text><text x="210" y="157">static</text><text x="210" y="199">堆</text>
+<text x="660" y="80" fill="#555">解释器中的对象</text>
+<text x="660" y="112">栈</text><text x="660" y="150">static</text><text x="660" y="188">内核管理的对象</text>
+<text x="660" y="264">页表</text>
+<text x="360" y="358">…</text>
+<g font-size="12"><text x="475" y="345">页表</text><text x="535" y="345">static</text><text x="605" y="345">CPU-local</text><text x="670" y="345">栈</text></g>
+<g font-size="13" fill="#555"><text x="575" y="398">内核代码区（解释器安排）</text><text x="785" y="398">内核管理的页</text></g>
+</g>
+<g stroke="#444" stroke-width="1.5" fill="none" marker-end="url(#a)">
+<line x1="210" y1="222" x2="210" y2="326"/><line x1="660" y1="210" x2="660" y2="238"/><line x1="660" y1="276" x2="660" y2="316"/>
+</g>
+<g stroke="#888" stroke-width="1.2" fill="none"><path d="M452,376 v6 h246 v-6"/><path d="M702,376 v6 h166 v-6"/></g>
+<g font-size="13" fill="#555">
+<text x="220" y="280">地址只要求互不重叠</text>
+<text x="650" y="230" text-anchor="end">虚拟地址</text><text x="670" y="302">物理地址</text>
+<text x="30" y="392">0</text><text x="390" y="392" text-anchor="end">地址空间上限</text>
+<text x="450" y="418">0</text><text x="870" y="418" text-anchor="end">伪物理内存容量</text>
+</g>
+</svg>

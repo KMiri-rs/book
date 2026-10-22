@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 870 350" width="870" height="350" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">KMiri 中一次内存访问的处理过程</title>
+<desc id="d">内核代码用虚拟地址访问内存；KMiri 按当前根页表翻译得到物理地址，再查该页的状态。页为 Typed 时，找到或创建所在 slot 的 Miri 对象，并进行 Miri 原有的越界、未初始化、借用和数据竞争检查；页为 Unused 或 Untyped 时找不到对象，按错误报告。根页表和页状态由内核通过 Shims 通知 KMiri。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<rect x="240" y="16" width="390" height="56" rx="8" fill="#fff4cc" stroke="#c9a227" stroke-width="1.5"/>
+<text x="435" y="40" text-anchor="middle" font-weight="bold">内核通过 Shims 通知 KMiri</text>
+<text x="435" y="62" text-anchor="middle" font-size="13" fill="#555">切换根页表 · 分配 / 改用途 / 释放页</text>
+<g stroke="#555" stroke-width="1.5">
+<rect x="20" y="120" width="170" height="70" rx="8" fill="#dde8f4"/>
+<rect x="240" y="120" width="170" height="70" rx="8" fill="#ece6f5"/>
+<rect x="460" y="120" width="170" height="70" rx="8" fill="#ece6f5"/>
+<rect x="680" y="120" width="170" height="70" rx="8" fill="#ece6f5"/>
+<rect x="460" y="250" width="170" height="70" rx="8" fill="#fde2e2" stroke="#c0504d"/>
+<rect x="680" y="250" width="170" height="80" rx="8" fill="#e2efda"/>
+</g>
+<g text-anchor="middle">
+<text x="105" y="149" font-weight="bold">内核代码</text><text x="105" y="173" font-size="13" fill="#555">用地址 va 读写内存</text>
+<text x="325" y="149" font-weight="bold">页表翻译</text><text x="325" y="173" font-size="13" fill="#555">按当前根页表查找</text>
+<text x="545" y="149" font-weight="bold">查页状态</text><text x="545" y="173" font-size="13" fill="#555">物理地址所在的页</text>
+<text x="765" y="149" font-weight="bold">找到或创建对象</text><text x="765" y="173" font-size="13" fill="#555">所在 slot 的 Miri 对象</text>
+<text x="545" y="279" font-weight="bold" fill="#a33">找不到对象</text><text x="545" y="303" font-size="13" fill="#555">按错误报告</text>
+<text x="765" y="276" font-weight="bold">Miri 原有检查</text><text x="765" y="298" font-size="13" fill="#555">越界、未初始化</text><text x="765" y="318" font-size="13" fill="#555">借用、数据竞争</text>
+</g>
+<g stroke="#444" stroke-width="1.5" fill="none" marker-end="url(#a)">
+<line x1="190" y1="155" x2="238" y2="155"/><line x1="410" y1="155" x2="458" y2="155"/><line x1="630" y1="155" x2="678" y2="155"/>
+<line x1="545" y1="190" x2="545" y2="248"/><line x1="765" y1="190" x2="765" y2="248"/>
+<line x1="325" y1="72" x2="325" y2="118" stroke-dasharray="5 4"/><line x1="545" y1="72" x2="545" y2="118" stroke-dasharray="5 4"/>
+</g>
+<g font-size="13" fill="#555">
+<text x="214" y="147" text-anchor="middle">va</text><text x="434" y="147" text-anchor="middle">pa</text><text x="654" y="147" text-anchor="middle">Typed</text>
+<text x="553" y="224">Unused / Untyped</text>
+<text x="333" y="100">根页表</text><text x="553" y="100">页状态</text>
+</g>
+</svg>

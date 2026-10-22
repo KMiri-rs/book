@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 400" width="820" height="400" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">页状态转换</title>
+<desc id="d">页从 Unused 经分配（alloc_pages）变为 Untyped，经改用途（retype_pages）变为 Typed，Typed 用途包括 Slab、PageTable 和 Stack。Untyped 和 Typed 页经释放（dealloc_pages）回到 Unused。内核代码区在启动时即标为 Typed(Interpreter)，由解释器使用。不按箭头的通知会被报告为页状态 UB。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<g stroke="#555" stroke-width="1.5">
+<ellipse cx="110" cy="200" rx="72" ry="34" fill="#f2f2f2"/>
+<ellipse cx="350" cy="200" rx="84" ry="34" fill="#fbe3d6"/>
+<rect x="530" y="96" width="260" height="210" rx="16" fill="none" stroke-dasharray="7 5"/>
+<rect x="570" y="138" width="180" height="40" rx="20" fill="#dde8f4"/><rect x="570" y="194" width="180" height="40" rx="20" fill="#dde8f4"/><rect x="570" y="250" width="180" height="40" rx="20" fill="#dde8f4"/>
+<rect x="530" y="330" width="260" height="56" rx="8" fill="#ece6f5"/>
+</g>
+<g text-anchor="middle">
+<text x="110" y="197" font-weight="bold">Unused</text><text x="110" y="218" font-size="12" fill="#555">未分配</text>
+<text x="350" y="197" font-weight="bold">Untyped</text><text x="350" y="218" font-size="12" fill="#555">已分配，未声明用途</text>
+<text x="660" y="124" font-weight="bold">Typed：已声明用途</text>
+<text x="660" y="163">Slab</text><text x="660" y="219">PageTable</text><text x="660" y="275">Stack</text>
+<text x="660" y="354" font-weight="bold">Typed(Interpreter)</text><text x="660" y="376" font-size="12" fill="#555">内核代码区，启动时即划给解释器</text>
+</g>
+<g stroke="#444" stroke-width="1.5" fill="none" marker-end="url(#a)">
+<line x1="182" y1="200" x2="264" y2="200"/><line x1="434" y1="200" x2="528" y2="200"/>
+<path d="M660,94 C660,8 110,8 110,164" stroke-dasharray="6 4"/>
+<path d="M350,166 C350,112 130,112 122,164" stroke-dasharray="6 4"/>
+</g>
+<g font-size="13" text-anchor="middle">
+<text x="223" y="192">分配</text><text x="223" y="222" font-family="monospace" font-size="12" fill="#555">alloc_pages</text>
+<text x="481" y="192">改用途</text><text x="481" y="222" font-family="monospace" font-size="12" fill="#555">retype_pages</text>
+<text x="385" y="64">释放 <tspan font-family="monospace" font-size="12" fill="#555">dealloc_pages</tspan></text>
+<text x="236" y="112">释放</text>
+</g>
+<g font-size="13" fill="#a33"><text x="30" y="336">不按箭头的通知（如重复分配、</text><text x="30" y="358">释放未分配的页）→ 报告页状态 UB</text></g>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 350" width="860" height="350" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">KMiri 中对象的两种来源</title>
+<desc id="d">上半部分：一个 slot 大小为 512 字节的 Typed(Slab) 页被分成 8 个 slot，只有被访问过的 slot 才创建对应的 Miri 对象，地址就是 slot 的物理地址。下半部分：Miri 创建的栈变量和 static 在第一次需要具体地址时，连同字节、初始化状态和指针来源一起搬入内核代码区中的对应位置。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<text x="20" y="28" font-weight="bold">内核管理的页：访问到哪个 slot，才创建哪个对象</text>
+<text x="20" y="54" font-size="13" fill="#555">Typed(Slab) 页，slot 大小 512 B</text>
+<g stroke="#555" stroke-width="1.5">
+<rect x="20" y="62" width="600" height="46" fill="#fff"/>
+<rect x="170" y="62" width="75" height="46" fill="#dde8f4"/>
+<rect x="120" y="150" width="175" height="46" rx="8" fill="#dde8f4"/>
+<rect x="20" y="262" width="230" height="64" rx="8" fill="#fbe3d6"/>
+<rect x="560" y="262" width="280" height="64" rx="8" fill="#ece6f5"/>
+</g>
+<g stroke="#999" stroke-width="1" stroke-dasharray="4 3"><line x1="95" y1="62" x2="95" y2="108"/><line x1="245" y1="62" x2="245" y2="108"/><line x1="320" y1="62" x2="320" y2="108"/><line x1="395" y1="62" x2="395" y2="108"/><line x1="470" y1="62" x2="470" y2="108"/><line x1="545" y1="62" x2="545" y2="108"/></g>
+<line x1="170" y1="62" x2="170" y2="108" stroke="#555" stroke-width="1.5"/>
+<g text-anchor="middle"><text x="207" y="90" font-size="13">slot 2</text><text x="207" y="178">Miri 对象（512 B）</text>
+<text x="135" y="290" font-weight="bold">栈变量 / static</text><text x="135" y="312" font-size="13" fill="#555">由 Miri 按原有方式创建</text>
+<text x="700" y="290" font-weight="bold">内核代码区中的对应位置</text><text x="700" y="312" font-size="13" fill="#555">伪物理内存</text>
+<text x="405" y="284" font-size="13" fill="#555">第一次需要具体地址时搬入：</text><text x="405" y="304" font-size="13" fill="#555">字节 + 初始化状态 + 指针来源</text>
+</g>
+<g stroke="#444" stroke-width="1.5" fill="none" marker-end="url(#a)"><line x1="207" y1="108" x2="207" y2="148"/><line x1="250" y1="315" x2="558" y2="315"/></g>
+<g font-size="13" fill="#555"><text x="635" y="80">其余 slot 尚未被访问，</text><text x="635" y="100">还没有对应的对象</text><text x="310" y="170">地址 = slot 的物理地址，</text><text x="310" y="190">之后的访问都经过 Miri 检查</text></g>
+<text x="20" y="246" font-weight="bold">栈变量和 static：第一次需要地址时搬入伪物理内存</text>
+</svg>
