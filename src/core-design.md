@@ -2,7 +2,7 @@
 
 本章说明 KMiri 怎样让 Miri 理解内核自己管理的内存和执行过程。阅读前只需了解两点：Miri 通过解释执行 MIR 来检查 Rust 中的未定义行为；它原本假设被检查的是普通用户态程序（见[引言](intro.md#r-intro.background)）。各节末尾的“当前实现情况”以[适配路线图](overview.md#r-overview.adaptation)中固定的源码版本为准。
 
-## 设计思路：把 KMiri 当作一种 CPU 架构
+## 设计思路：Mirch 伪 CPU 架构
 
 r[core.approach]
 
@@ -33,7 +33,7 @@ Mirch 需要替代真实硬件提供几项能力，下表也是本章其余各�
 
 KMiri 先按当前页表把虚拟地址翻译成物理地址，再查这一页的状态。只有被内核声明了用途（Typed）的页上才有 Rust 对象：访问落到具体对象后，继续接受 Miri 原有的越界、未初始化、借用和数据竞争检查。如果这一页还没分配、已经释放，或者还没声明用途，就找不到对象，访问按错误报告。根页表和页状态都由内核通过 Shims 告诉 KMiri。
 
-## 伪物理内存（Pseudo Physical Memory）
+## 伪物理内存
 
 r[core.memory]
 
@@ -62,7 +62,7 @@ KMiri 没有改写 Miri 访问对象、检查 UB 的逻辑，只改了两件事�
 
 </details>
 
-## 页状态跟踪（Page State Tracking）
+## 页状态跟踪
 
 r[core.page-state]
 
@@ -96,7 +96,7 @@ Untyped 页上没有 Rust 对象，内核要用专门的接口读写它（如 `k
 
 </details>
 
-## 页表模型（Page Table Model）
+## 页表模型
 
 r[core.page-table]
 
@@ -129,7 +129,7 @@ r[core.page-table]
 
 </details>
 
-## 地址感知的分配（Address-Aware Allocation）
+## 地址感知的分配
 
 r[core.allocation]
 
@@ -159,7 +159,7 @@ r[core.allocation]
 
 </details>
 
-## 内核线程模型（Kernel Thread Model）
+## 内核线程模型
 
 r[core.thread]
 
