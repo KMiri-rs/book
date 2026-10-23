@@ -1,3 +1,12 @@
+:root {
+  --content-max-width: 75%;
+}
+
 .rule[id^="r-"] {
-  margin-top: 2rem;
+  margin-top: 1rem;
+}
+
+.table-wrapper {
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
 }
