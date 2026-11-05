@@ -14,3 +14,11 @@ KMiri 是基于 Miri 的 Rust 内核执行与检查环境：为选定的内核�
 - [评估](./evaluation.md)
 - [局限性与未来工作](./limitations-and-future-work.md)
 - [附录](./appendix.md)
+
+## 感谢
+
+KMiri 项目由 [北京通明湖信息技术应用创新中心][tlaic] 赞助支持。
+
+<img src="./images/tlaic.svg" alt="tlaic" width="200">
+
+[tlaic]: https://tlaic.ac.cn/
