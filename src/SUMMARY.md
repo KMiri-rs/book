@@ -12,3 +12,5 @@
 - [评估](./evaluation.md)
 - [局限性与未来工作](./limitations-and-future-work.md)
 - [附录](./appendix.md)
+  - [中断与引用有效性](./appendix/interrupt-references.md)
+  - [LKMM](./appendix/LKMM.md)
