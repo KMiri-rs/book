@@ -19,4 +19,6 @@
 - [附录](./appendix.md)
   - [KMiri 中断设计](./appendix/KMiri-interrupt.md)
   - [中断与引用有效性](./appendix/interrupt-references.md)
+  - [指针出处与 LLVM IR](./appendix/pointer-provenance.md)
   - [LKMM](./appendix/LKMM.md)
+  - [死锁](./appendix/deadlock.md)
