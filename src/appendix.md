@@ -1,8 +1,5 @@
 # 附录
 
-- [中断与引用有效性](./appendix/interrupt-references.md)
-- [LKMM 与代码审查](./appendix/LKMM.md)
-
 ## Shims API 完整清单
 
 [把当前所有 API 原型和语义约束放在这里，便于查阅。]
