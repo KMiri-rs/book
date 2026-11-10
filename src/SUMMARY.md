@@ -10,6 +10,7 @@
 - [系统总览](./overview.md)
 - [设计目标与原则](./goals-and-principles.md)
 - [核心设计](./core-design.md)
+  - [Asterinas 与 KMiri 的内存分配交互](./core-design/kmiri-asterinas-allocation.md)
 - [检查能力与错误模型](./checking-and-error-model.md)
 - [实现细节](./implementation.md)
 - [运行与调试](./running-and-debugging.md)
