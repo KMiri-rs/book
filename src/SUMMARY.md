@@ -25,3 +25,4 @@
   - [指针出处与 LLVM IR](./appendix/pointer-provenance.md)
   - [LKMM](./appendix/LKMM.md)
   - [死锁](./appendix/deadlock.md)
+  - [Rust for Linux 测试](./appendix/rust-for-linux.md)
