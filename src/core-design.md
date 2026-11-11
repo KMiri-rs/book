@@ -139,7 +139,7 @@ r[core.allocation]
 
 ![KMiri 中对象的两种来源](images/core-allocation.svg)
 
-**内核在页上创建的对象。** 内核把页改为 Typed 时已经给出了 slot 大小。KMiri 并不立即为每个 slot 创建对象，而是在某个 slot 第一次被访问时，才创建一个与 slot 同样大小的 Miri 对象，地址就是该 slot 的物理地址。这样内核的分配器不需要每分配一个对象就通知一次，而之后对这个对象的访问都会接受 Miri 检查。页被释放时，页上的这些对象一起删除。
+**内核在页上创建的对象。** 内核把页改为 Typed 时已经给出了 slot 大小。KMiri 通常不会立即为每个 slot 创建对象，而是在某个 slot 第一次被访问时，才创建一个与 slot 同样大小的 Miri 对象，地址就是该 slot 的物理地址。对由内核分配器单独管理生命周期的对象，适配层也可以在 slot 分配和释放时通知 KMiri，建立和结束对应的 Miri allocation；Asterinas slab 已使用这组接口。页被释放时，页上的剩余对象映射一起清理。
 
 **Rust 运行时创建的对象，即栈变量和 static。** 它们仍由 Miri 按原有方式创建，KMiri 在它们第一次需要具体地址时，把它们搬到内核代码区中的对应位置。搬的不只是字节，还有“哪些字节已初始化”和“字节中的指针来自哪个对象”这两类信息，这样 Miri 之后的检查结果不受影响。
 
@@ -147,7 +147,7 @@ r[core.allocation]
 
 ### 当前实现情况
 
-* slot 在改用途时就固定下来，对象只在整页释放时删除。真实的 slab 分配器会在一页中反复分配和释放单个对象，所以“页还在，但其中某个对象已被分配器回收”之后的访问，目前还不能识别为释放后使用。
+* 没有单独分配 / 释放通知的 typed slot 仍由 KMiri 在第一次访问时懒创建，并随整页释放清理。Asterinas OSTD slab 另外会在对象 slot 分配和释放时通知 KMiri，因此可以检查“页仍在使用、对象 slot 已回收”之后的访问。见 [Asterinas 与 KMiri 的内存分配交互](core-design/kmiri-asterinas-allocation.md)。
 * 跨越多页的对象，其初始化状态还没有正确继承（源码中有 FIXME）。
 
 <details>
@@ -238,6 +238,8 @@ r[core.shims]
 | 页管理 | `kern_miri_alloc_pages` | 页分配器分出页时 | Unused → Untyped |
 | | `kern_miri_retype_pages` | 把页用作 slab、页表、栈等 | Untyped → Typed，记录 slot 大小 |
 | | `kern_miri_dealloc_pages` | 页还给页分配器时 | 变回 Unused，删除页上的对象 |
+| slab 对象 | `kern_miri_alloc_heap_slot`、`kern_miri_dealloc_heap_slot` | slab slot 分配给对象或归还分配器时 | 建立或结束该 slot 的 Miri allocation |
+| slab 元数据 | `kern_miri_set_heap_slot_next`、`kern_miri_get_heap_slot_next` | KMiri 模式下操作 freelist | 在影子表保存 / 读取 freelist 链接，避免占用对象 allocation |
 | 原始字节操作 | `kern_miri_zero`、`kern_miri_write_bytes` | 按页清零，或写入一段字节 | 写入字节，并记录这些字节已初始化 |
 | | `kern_miri_copy_untyped` | 在 Untyped 页之间复制 | 复制字节和初始化状态 |
 | 页表 | `kern_miri_set_root_page_table`、`kern_miri_get_root_page_table` | 切换或读取当前页表 | 更新或返回根页表地址 |

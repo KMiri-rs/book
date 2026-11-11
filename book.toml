@@ -9,7 +9,7 @@ build-dir = "public"
 default-theme = "light"
 git-repository-url = "https://github.com/KMiri-rs/book"
 edit-url-template = "https://github.com/KMiri-rs/book/edit/main/{path}"
-additional-js = ["giscus.js"]
+additional-js = ["giscus.js", "mermaid.min.js", "mermaid-init.js"]
 additional-css = ["theme/custom.css"]
 
 [output.html.fold]
@@ -18,3 +18,6 @@ level = 0
 
 [preprocessor.spec]
 command = "mdbook-spec"
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
