@@ -19,6 +19,7 @@
 - [运行与调试](./running-and-debugging.md)
 - [评估](./evaluation.md)
 - [局限性与未来工作](./limitations-and-future-work.md)
+- [周报](./weeklog.md)
 - [附录](./appendix.md)
   - [lwz 旧设计]()
     - [v0](./lwz/lwz.md)
