@@ -198,28 +198,15 @@ KMiri 模拟多个 CPU，有两个原因：一是内核本身有大量多核相�
 
 ![普通 Miri 与 KMiri 的并发执行顺序](images/core-smp.svg)
 
-随机切换由 Miri 的随机种子（seed）决定。固定内核版本、配置和 seed，就能复现同一条执行路径。
+CPU 间的随机切换由配置项 `[smp].seed` 决定。固定内核版本、配置和 seed，就能复现同一条执行路径。
 
-**启动其他 CPU。** 真实内核由主 CPU 通过特定的硬件机制唤醒其他 CPU。在 Mirch 下，内核调用 `kern_miri_init_ap`，指定 CPU 编号、入口函数和栈，KMiri 为该 CPU 创建第一个线程。
+**启动其他 CPU。** 真实内核由主 CPU 通过特定的硬件机制唤醒其他 CPU。在 Mirch 下，内核调用 `kern_miri_start_cpu`，指定 CPU 编号、入口函数、参数和栈，KMiri 为该 CPU 创建第一个线程。
 
 **CPU-local 数据。** 内核通常把 CPU-local 变量放进 `.cpu_local` 段，每个 CPU 一份副本，段的位置在链接时才确定。而 Miri 在链接之前就开始解释执行，不知道这个段在哪里。所以 KMiri 在内核代码区中预留了一块 CPU-local 区域，遇到要放进 `.cpu_local` 段的 static，就把它放在这块区域。真实架构用一个寄存器保存当前 CPU 的 CPU-local 基地址，Mirch 用 `kern_miri_set_cpu_local_base` / `kern_miri_get_cpu_local_base` 代替它。
 
 ### 当前实现情况
 
-多核支持还没有在任何内核上实际运行过：
-
-* 解释器目前固定提供两个 CPU。
-* 星绽在 Mirch 下启动其他 CPU 的函数目前为空，只运行一个 CPU；TockOS 和 BlueOS 的接入也是单核。所以上面的 CPU 间随机切换还没有在真实内核上起作用。
-* 为每个 CPU 换算 CPU-local 变量地址的接口 `kern_miri_get_cpu_local_va` 目前直接返回传入的地址，换算逻辑还没有启用，所以“每个 CPU 各有一份副本”尚未实现。
-
-<details>
-<summary>相关源码</summary>
-
-* [CPU 数量](https://github.com/KMiri-rs/miri/blob/af87bdb338e347872bc2429308e2865901488bfb/src/machine.rs#L494-L494)、[CPU 与线程的绑定](https://github.com/KMiri-rs/miri/blob/af87bdb338e347872bc2429308e2865901488bfb/src/concurrency/thread.rs#L468-L490)、[CPU 间随机切换](https://github.com/KMiri-rs/miri/blob/af87bdb338e347872bc2429308e2865901488bfb/src/concurrency/thread.rs#L1362-L1379)、[线程随机切换默认关闭](https://github.com/KMiri-rs/miri/blob/af87bdb338e347872bc2429308e2865901488bfb/src/eval.rs#L208-L209)
-* [启动其他 CPU](https://github.com/KMiri-rs/miri/blob/af87bdb338e347872bc2429308e2865901488bfb/src/shims/foreign_items.rs#L851-L873) → [星绽中为空的 AP 启动](https://github.com/KMiri-rs/asterinas/blob/e255c1ed5550dc2965c535c824f17f9f353fc31e/ostd/src/arch/miri/boot/smp.rs#L6-L12)
-* [CPU-local 基地址与地址换算](https://github.com/KMiri-rs/miri/blob/af87bdb338e347872bc2429308e2865901488bfb/src/shims/foreign_items.rs#L834-L850)、[地址换算（未启用）](https://github.com/KMiri-rs/miri/blob/af87bdb338e347872bc2429308e2865901488bfb/src/shims/foreign_items.rs#L979-L1009)、[识别 CPU-local static](https://github.com/KMiri-rs/miri/blob/af87bdb338e347872bc2429308e2865901488bfb/src/machine.rs#L1565-L1572) → [星绽调用](https://github.com/KMiri-rs/asterinas/blob/e255c1ed5550dc2965c535c824f17f9f353fc31e/ostd/src/arch/miri/cpu/local.rs#L5-L16)
-
-</details>
+星绽已经能在 KMiri 上以多个 CPU 运行，CPU 个数可配置，默认为 1；TockOS 和 BlueOS 的接入仍是单核。设计、检测结果和局限见[多核并发检测的整体设计与进展](smp/design.md)。
 
 ## Shims API 设计
 

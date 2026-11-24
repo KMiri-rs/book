@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" width="960" height="430" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">有同步和没有同步时，向量时钟的判定</title>
+<desc id="d">左侧 T1 写 X 后没有同步，T2 读 X 时不知道 T1 的写，报数据竞争。右侧 T1 通过 release 发布，T2 通过 acquire 同步后读 X，没有竞争。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker><marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#2e7d32"/></marker><marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#c62828"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<g font-size="18" font-weight="bold" text-anchor="middle"><text x="235" y="32" fill="#c62828">没有同步：报数据竞争</text><text x="720" y="32" fill="#2e7d32">release / acquire：安全</text></g>
+<line x1="480" y1="15" x2="480" y2="415" stroke="#ddd"/>
+<g font-weight="bold"><text x="24" y="92">T1</text><text x="24" y="232">T2</text><text x="504" y="92">T1</text><text x="504" y="232">T2</text></g>
+<g fill="#e8f0fe" stroke="#4a76c9" stroke-width="1.5"><rect x="70" y="60" width="190" height="56" rx="6"/><rect x="550" y="60" width="160" height="56" rx="6"/><rect x="735" y="60" width="200" height="56" rx="6"/></g>
+<g text-anchor="middle"><text x="165" y="84">写 X = 42</text><text x="165" y="105" font-size="13" fill="#555">T1 时钟 [1, 0]</text><text x="630" y="84">写 X = 42</text><text x="630" y="105" font-size="13" fill="#555">T1 时钟 [1, 0]</text><text x="835" y="84">release 写 flag</text><text x="835" y="105" font-size="13" fill="#555">T1 时钟 [2, 0]</text></g>
+<line x1="710" y1="88" x2="733" y2="88" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+<g fill="#fdecea" stroke="#c62828" stroke-width="1.5"><rect x="230" y="200" width="210" height="56" rx="6"/></g>
+<g fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"><rect x="550" y="200" width="175" height="56" rx="6"/><rect x="750" y="200" width="185" height="56" rx="6"/></g>
+<g text-anchor="middle"><text x="335" y="224">读 X</text><text x="335" y="245" font-size="13" fill="#555">T2 时钟 [0, 1]</text><text x="637" y="224">acquire 读 flag</text><text x="637" y="245" font-size="13" fill="#555">T2 时钟 [2, 1]</text><text x="842" y="224">读 X</text><text x="842" y="245" font-size="13" fill="#555">T2 时钟 [2, 2]</text></g>
+<path d="M260,104 C310,125 325,150 332,197" fill="none" stroke="#888" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#a)"/>
+<text x="345" y="150" font-size="13" fill="#555">解释器换 CPU</text><text x="345" y="169" font-size="13" fill="#c62828">不合并时钟</text>
+<path d="M800,118 C760,150 690,165 655,197" fill="none" stroke="#2e7d32" stroke-width="2" marker-end="url(#g)"/>
+<text x="760" y="170" font-size="13" fill="#2e7d32">同步：T2 得知 T1 的进度</text>
+<line x1="725" y1="228" x2="748" y2="228" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="40" y="295" width="410" height="105" rx="6" fill="#fff5f5" stroke="#e7b4b4"/>
+<text x="60" y="325">X 记录：T1 在第 1 步写过</text><text x="60" y="350">T2 的时钟里 T1 只到第 0 步，0 &lt; 1</text><text x="60" y="378" font-weight="bold" fill="#c62828">两次访问没有先后关系，是数据竞争</text>
+<rect x="510" y="295" width="425" height="105" rx="6" fill="#f3faf3" stroke="#b5d8b7"/>
+<text x="530" y="325">X 记录：T1 在第 1 步写过</text><text x="530" y="350">T2 的时钟里 T1 已到第 2 步，2 ≥ 1</text><text x="530" y="378" font-weight="bold" fill="#2e7d32">写先于读，没有竞争</text>
+</svg>

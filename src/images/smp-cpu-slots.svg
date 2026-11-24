@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 390" width="920" height="390" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">CPU 槽位、运行中的线程和挂起的任务</title>
+<desc id="d">三个 CPU 槽位各放一个正在运行的线程，解释器只在槽位之间切换。挂起的任务不在槽位里，不会被执行。任务 X 被内核调度器从 CPU 1 迁移到 CPU 2。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker><marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#2e7d32"/></marker><marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#c62828"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<text x="30" y="30" font-size="17" font-weight="bold">CPU 槽位：解释器只在这里面选下一个执行者</text>
+<rect x="24" y="44" width="872" height="172" rx="8" fill="#f7f9fc" stroke="#c8d2e0"/>
+<g fill="#fff" stroke="#4a76c9" stroke-width="1.5"><rect x="45" y="62" width="260" height="136" rx="7"/><rect x="330" y="62" width="260" height="136" rx="7"/><rect x="615" y="62" width="260" height="136" rx="7"/></g>
+<g font-weight="bold" text-anchor="middle"><text x="175" y="88">CPU 0</text><text x="460" y="88">CPU 1</text><text x="745" y="88">CPU 2</text></g>
+<g font-size="13" fill="#555" text-anchor="middle"><text x="175" y="110">本核基址 · 中断状态</text><text x="460" y="110">本核基址 · 中断状态</text><text x="745" y="110">本核基址 · 中断状态</text></g>
+<g fill="#e8f0fe" stroke="#4a76c9"><rect x="70" y="126" width="210" height="50" rx="6"/><rect x="355" y="126" width="210" height="50" rx="6"/><rect x="640" y="126" width="210" height="50" rx="6"/></g>
+<g text-anchor="middle"><text x="175" y="157">线程：kernel_main</text><text x="460" y="157">线程：任务 Y</text><text x="745" y="157">线程：任务 X</text></g>
+<text x="30" y="258" font-size="17" font-weight="bold">挂起的任务：不在槽位里，KMiri 不会选中</text>
+<rect x="24" y="272" width="872" height="100" rx="8" fill="#fafafa" stroke="#ccc" stroke-dasharray="6 4"/>
+<g fill="#fff" stroke="#999" stroke-dasharray="5 4"><rect x="70" y="296" width="150" height="50" rx="6"/><rect x="245" y="296" width="150" height="50" rx="6"/><rect x="420" y="296" width="150" height="50" rx="6"/></g>
+<g text-anchor="middle" fill="#666"><text x="145" y="327">任务 T4</text><text x="320" y="327">任务 T5</text><text x="495" y="327">任务 T6</text></g>
+<path d="M565,178 C600,226 650,226 690,179" fill="none" stroke="#7b1fa2" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#a)"/>
+<text x="610" y="244" font-size="13" fill="#7b1fa2">迁移只需更换槽位里的线程</text>
+<text x="610" y="327" font-size="13" fill="#555">内核调度器切换到它时才进入槽位</text>
+</svg>
