@@ -10,6 +10,7 @@
   - [v0]()
     - [v0](./interrupt/v0.md)
     - [v0: review](./interrupt/v0_review.md)
+- [多核并发检测](./smp/design.md)
 - [系统总览](./overview.md)
 - [设计目标与原则](./goals-and-principles.md)
 - [核心设计](./core-design.md)

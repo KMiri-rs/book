@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 420" width="920" height="420" role="img" aria-labelledby="t d" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="15" fill="#222">
+<title id="t">asterinas#4270 中缺失的同步关系</title>
+<desc id="d">CPU 1 上任务 A 写元数据后用 release 减引用计数。CPU 2 上任务 B 用 relaxed CAS 获得独占权，没有与 release 同步，随后写元数据，与 A 的写构成数据竞争。把 CAS 改成 acquire 后建立先后关系。</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#444"/></marker><marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#2e7d32"/></marker><marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#c62828"/></marker></defs><rect width="100%" height="100%" fill="#fff"/>
+<g font-weight="bold"><text x="24" y="92">CPU 1</text><text x="24" y="108" font-size="13" fill="#555">任务 A</text><text x="24" y="262">CPU 2</text><text x="24" y="278" font-size="13" fill="#555">任务 B</text></g>
+<g fill="#e8f0fe" stroke="#4a76c9" stroke-width="1.5"><rect x="110" y="60" width="240" height="62" rx="6"/><rect x="400" y="60" width="240" height="62" rx="6"/></g>
+<g text-anchor="middle"><text x="230" y="86">① 写元数据</text><text x="230" y="108" font-size="13" fill="#555">value.store(1, Relaxed)</text><text x="520" y="86">② drop(a)</text><text x="520" y="108" font-size="13" fill="#555">fetch_sub(1, Release)</text></g>
+<line x1="350" y1="91" x2="398" y2="91" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="400" y="230" width="240" height="62" rx="6" fill="#fff8e1" stroke="#c99a2e" stroke-width="1.5"/>
+<rect x="670" y="230" width="225" height="62" rx="6" fill="#fdecea" stroke="#c62828" stroke-width="1.5"/>
+<g text-anchor="middle"><text x="520" y="256">③ try_from 成功</text><text x="520" y="278" font-size="13" fill="#555">CAS 1 → UNIQUE，Relaxed</text><text x="782" y="256">④ 写元数据</text><text x="782" y="278" font-size="13" fill="#555">*meta_mut()... = 2</text></g>
+<line x1="640" y1="261" x2="668" y2="261" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="520" y1="122" x2="520" y2="228" stroke="#999" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#a)"/>
+<text x="532" y="162" font-size="13" fill="#555">B 读到引用计数为 1</text><text x="532" y="182" font-size="13" fill="#c62828">Release 遇上 Relaxed：不同步</text>
+<path d="M260,124 C330,210 610,185 730,228" fill="none" stroke="#c62828" stroke-width="2" stroke-dasharray="3 4" marker-end="url(#r)"/>
+<text x="150" y="196" font-size="14" font-weight="bold" fill="#c62828">① 和 ④ 没有先后关系</text><text x="150" y="217" font-size="14" font-weight="bold" fill="#c62828">Miri 报数据竞争</text>
+<rect x="24" y="325" width="872" height="78" rx="6" fill="#f3faf3" stroke="#b5d8b7"/>
+<text x="44" y="356" font-weight="bold" fill="#2e7d32">修复：把 ③ 的成功序改成 Acquire</text><text x="44" y="384">这样 ② 同步到 ③，于是 ① 先于 ④。x86 的 lock cmpxchg 自带全屏障，所以 bug 版在 x86 真机上看不出错误。</text>
+</svg>
